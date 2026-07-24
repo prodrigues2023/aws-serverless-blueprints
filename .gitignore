@@ -1,0 +1,35 @@
+# Infrastructure as code
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+cdk.out/
+.aws-sam/
+samconfig.toml
+
+# Node / Python (IaC and function code)
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+dist/
+build/
+
+# Environment / credentials
+.env
+.env.*
+!.env.example
+*.pem
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
