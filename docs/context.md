@@ -86,3 +86,7 @@ Deliberate exclusions:
 - [Well-Architected notes](./well-architected-notes.md) — the blueprints against the AWS pillars
 - [Diagrams](./diagrams) — the four shapes and the at-least-once retry path
 - [ADRs](./adr) — the cross-cutting decisions every blueprint inherits
+- [Contracts](./contracts) — the field-level shape of the event, idempotency, IAM-role, and
+  dead-letter conventions, specified once so a reference deployment
+  ([Milestone 3](../ROADMAP.md#milestone-3--reference-deployments)) can be built against them
+  without re-deciding them

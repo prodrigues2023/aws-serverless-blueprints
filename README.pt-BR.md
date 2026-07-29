@@ -4,8 +4,8 @@
 > catálogo das formas recorrentes de workload serverless na AWS — cada uma honesta sobre statelessness,
 > entrega at-least-once, cold starts e least privilege. Documentado primeiro, implementado em público.
 
-[![Fase](https://img.shields.io/badge/fase-1%20design-blue)](./ROADMAP.md)
-[![ADRs](https://img.shields.io/badge/ADRs-5-green)](./docs/adr)
+[![Fase](https://img.shields.io/badge/fase-2%20contratos-blue)](./ROADMAP.md)
+[![ADRs](https://img.shields.io/badge/ADRs-6-green)](./docs/adr)
 [![Blueprints](https://img.shields.io/badge/blueprints-4-blueviolet)](./docs/blueprints)
 [![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-lightgrey)](./LICENSE)
 
@@ -34,7 +34,8 @@ são o ponto.
 | Catálogo de blueprints | 4 blueprints | [docs/blueprints](./docs/blueprints) |
 | Notas Well-Architected | Pronto | [docs/well-architected-notes.md](./docs/well-architected-notes.md) |
 | Diagramas de arquitetura | Pronto | [docs/diagrams](./docs/diagrams) |
-| Registros de Decisão de Arquitetura | 5 publicados | [docs/adr](./docs/adr) |
+| Registros de Decisão de Arquitetura | 6 publicados | [docs/adr](./docs/adr) |
+| Contratos — convenções de evento, idempotência, role IAM, dead-letter | Pronto | [docs/contracts](./docs/contracts) |
 | Deployments de referência | Planejados — Fase 3 | [ROADMAP.md](./ROADMAP.md) |
 
 ## A ideia
@@ -51,6 +52,11 @@ Os blueprints diferem; quatro fatos transversais, cada um um ADR, não:
   não descobertos num incidente.
 - **Cada função tem sua própria role de menor privilégio** — uma função, uma role, permissões mínimas —
   para que o raio de explosão de uma função comprometida seja limitado por construção.
+
+[docs/contracts](./docs/contracts) especifica a forma verificável por trás de "idempotente" e
+"menor privilégio": o envelope de evento, a mecânica do registro de dedupe (incluindo a corrida
+de entrega concorrente), a forma da statement de política IAM, e a convenção de dead-letter
+([ADR-0006](./docs/adr/0006-event-idempotency-and-iam-role-conventions.md)).
 
 ## Os blueprints
 
@@ -72,8 +78,8 @@ nunca seja pulado.
 
 Quatro fases, acompanhadas como milestones no GitHub. Detalhes em [ROADMAP.md](./ROADMAP.md).
 
-1. **Blueprints** — as quatro formas, seus modos de falha, os diagramas, os ADRs
-2. **Contratos** — as convenções de evento, idempotência e role IAM que todo blueprint compartilha
+1. **Blueprints** — as quatro formas, seus modos de falha, os diagramas, os ADRs — concluído
+2. **Contratos** — convenções de evento, idempotência, role IAM e dead-letter que todo blueprint compartilha — concluído
 3. **Deployments de referência** — cada blueprint como infraestrutura-como-código para deployar
 4. **Drills de resiliência** — forçar retries, cold starts e throttling; mostrar cada blueprint aguentando
 

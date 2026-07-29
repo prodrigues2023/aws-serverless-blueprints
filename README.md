@@ -4,8 +4,8 @@
 > of the recurring serverless workload shapes on AWS — each honest about statelessness, at-least-once
 > delivery, cold starts, and least privilege. Documented first, implemented in the open.
 
-[![Phase](https://img.shields.io/badge/phase-1%20design-blue)](./ROADMAP.md)
-[![ADRs](https://img.shields.io/badge/ADRs-5-green)](./docs/adr)
+[![Phase](https://img.shields.io/badge/phase-2%20contracts-blue)](./ROADMAP.md)
+[![ADRs](https://img.shields.io/badge/ADRs-6-green)](./docs/adr)
 [![Blueprints](https://img.shields.io/badge/blueprints-4-blueviolet)](./docs/blueprints)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
 
@@ -33,7 +33,8 @@ they are the point.
 | Blueprint catalogue | 4 blueprints | [docs/blueprints](./docs/blueprints) |
 | Well-Architected notes | Done | [docs/well-architected-notes.md](./docs/well-architected-notes.md) |
 | Architecture diagrams | Done | [docs/diagrams](./docs/diagrams) |
-| Architecture Decision Records | 5 published | [docs/adr](./docs/adr) |
+| Architecture Decision Records | 6 published | [docs/adr](./docs/adr) |
+| Contracts — event, idempotency, IAM-role, dead-letter conventions | Done | [docs/contracts](./docs/contracts) |
 | Reference deployments | Planned — Phase 3 | [ROADMAP.md](./ROADMAP.md) |
 
 ## The idea
@@ -53,6 +54,11 @@ respect.** The blueprints differ; four cross-cutting facts, each an ADR, do not:
 - **Every function has its own least-privilege role**
   ([ADR-0005](./docs/adr/0005-least-privilege-per-function.md)). One function, one role, the minimum
   permissions — so the blast radius of a compromised or buggy function is bounded by construction.
+
+[docs/contracts](./docs/contracts) specifies the checkable shape behind "idempotent" and "least
+privilege": the event envelope, the dedupe-record mechanics (including the concurrent-delivery
+race), the IAM policy-statement shape, and the dead-letter convention
+([ADR-0006](./docs/adr/0006-event-idempotency-and-iam-role-conventions.md)).
 
 ## The blueprints
 
@@ -79,8 +85,8 @@ that has already been shaped by the wrong assumption.
 
 Four phases, tracked as GitHub milestones. See [ROADMAP.md](./ROADMAP.md).
 
-1. **Blueprints** — the four shapes, their failure modes, the diagrams, the ADRs
-2. **Contracts** — the event, idempotency, and IAM-role conventions every blueprint shares
+1. **Blueprints** — the four shapes, their failure modes, the diagrams, the ADRs — done
+2. **Contracts** — the event, idempotency, IAM-role, and dead-letter conventions every blueprint shares — done
 3. **Reference deployments** — each blueprint as infrastructure-as-code you can deploy
 4. **Resilience drills** — force retries, cold starts, and throttling; show each blueprint holding
 

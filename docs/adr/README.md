@@ -10,7 +10,7 @@ See [ADR-0001](./0001-record-architecture-decisions.md) for the process itself.
 | [0003](./0003-at-least-once.md) | Delivery is at-least-once — idempotency and dead-lettering | Accepted |
 | [0004](./0004-cold-start-and-concurrency.md) | Cold start and concurrency are the cost/latency model | Accepted |
 | [0005](./0005-least-privilege-per-function.md) | Every function has its own least-privilege role | Accepted |
-| 0006 | Event, idempotency, and IAM-role conventions | Planned — Milestone 2 |
+| [0006](./0006-event-idempotency-and-iam-role-conventions.md) | Event, idempotency, and IAM-role conventions | Accepted |
 
 ## How the accepted decisions fit together
 
@@ -29,6 +29,12 @@ These are not blueprint-specific; they are the platform's nature. The blueprints
 ([the catalogue](../blueprints)) choose a *shape*; these ADRs state what every shape must respect. The
 most commonly-violated in practice is **0003** — at-least-once — because the platform hides the retry
 and the double-processing only shows up as a subtle data bug in production.
+
+**0006** is the odd one out on purpose: it does not add a new serverless truth, it gives 0003 and
+0005 a shared, checkable shape. "Idempotent" and "least privilege" only become things a reviewer
+can verify once there is a fixed dedupe-record shape and a fixed policy-statement shape to check
+them against — see [docs/contracts](../contracts) for the field-level specification of 0003
+through 0006.
 
 ## Template
 

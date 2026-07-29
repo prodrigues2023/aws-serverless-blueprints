@@ -32,15 +32,25 @@ modes, and every decision traces to a serverless truth every shape must respect.
 
 **Goal:** the conventions every blueprint shares are specified once.
 
-| Issue | Deliverable |
-| --- | --- |
-| Event convention | The shape of an event and its identity for idempotency |
-| Idempotency convention | How a handler dedupes a redelivered event |
-| IAM-role convention | One role per function, scoped to exactly what it touches |
-| Dead-letter convention | Where failed messages go and how they are reprocessed |
+| Issue | Deliverable | Status |
+| --- | --- | --- |
+| Event convention | The shape of an event and its identity for idempotency | Done — [event-convention.md](./docs/contracts/event-convention.md) |
+| Idempotency convention | How a handler dedupes a redelivered event | Done — [idempotency-convention.md](./docs/contracts/idempotency-convention.md) |
+| IAM-role convention | One role per function, scoped to exactly what it touches | Done — [iam-role-convention.md](./docs/contracts/iam-role-convention.md) |
+| Dead-letter convention | Where failed messages go and how they are reprocessed | Done — [dead-letter-convention.md](./docs/contracts/dead-letter-convention.md) |
 
-**Exit criteria:** two blueprints could be built by different people and still share event,
-idempotency, and role conventions.
+**Exit criteria met** — the four conventions compose rather than restating each other: the event
+convention's `eventId` is the field the idempotency convention keys its dedupe record on; the
+IAM-role convention's example role includes the statement for that same dedupe table; the
+dead-letter convention's replay step explicitly re-enters the idempotency convention's check
+rather than reprocessing blindly. A reviewer checks any Milestone 3 deployment's role, dedupe
+table, and DLQ against these four documents field by field, the same test named in
+[docs/contracts/README.md](./docs/contracts/README.md).
+
+Backed by [ADR-0006](./docs/adr/0006-event-idempotency-and-iam-role-conventions.md) (event and
+idempotency and IAM-role conventions) and [ADR-0003](./docs/adr/0003-at-least-once.md) (the
+dead-letter convention specifically, since that decision was already made there — the new ADR
+doesn't restate it, only the missing three).
 
 ---
 
