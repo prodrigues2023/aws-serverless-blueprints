@@ -1,0 +1,78 @@
+name: CI
+
+# What this pipeline verifies, and what it deliberately does not:
+#   - Python: the handler logic against real (moto-mocked) AWS API semantics,
+#     plus lint/type-check. No AWS account involved.
+#   - Terraform: `fmt -check` and `validate` for every blueprint and every
+#     shared module. `validate` is syntax/type checking against the provider
+#     schema -- it never calls AWS and needs no credentials.
+#   - What it does NOT do: `terraform plan`/`apply` against a real AWS
+#     account. That requires real credentials this pipeline does not have,
+#     and is out of scope until a deploy target is provisioned. See
+#     infra/README.md and ROADMAP.md Milestone 3 for the disclosure.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Handler tests against moto-mocked DynamoDB/SQS (no AWS account)
+        run: pytest tests/ -q
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: ruff check handlers tests
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: mypy handlers/shared --ignore-missing-imports
+
+  terraform-fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform fmt -check -recursive infra/
+
+  terraform-validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dir:
+          - infra/synchronous-api
+          - infra/async-fanout
+          - infra/orchestrated-workflow
+          - infra/scheduled-batch
+          - infra/modules/iam_role
+          - infra/modules/idempotency_table
+          - infra/modules/dead_letter_queue
+          - infra/modules/lambda_function
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - name: terraform init (no backend, no credentials) + validate
+        working-directory: ${{ matrix.dir }}
+        run: |
+          terraform init -backend=false -input=false
+          terraform validate

@@ -4,7 +4,7 @@
 > catálogo das formas recorrentes de workload serverless na AWS — cada uma honesta sobre statelessness,
 > entrega at-least-once, cold starts e least privilege. Documentado primeiro, implementado em público.
 
-[![Fase](https://img.shields.io/badge/fase-2%20contratos-blue)](./ROADMAP.md)
+[![Fase](https://img.shields.io/badge/fase-3%20deployments%20de%20refer%C3%AAncia-blue)](./ROADMAP.md)
 [![ADRs](https://img.shields.io/badge/ADRs-6-green)](./docs/adr)
 [![Blueprints](https://img.shields.io/badge/blueprints-4-blueviolet)](./docs/blueprints)
 [![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-lightgrey)](./LICENSE)
@@ -36,7 +36,7 @@ são o ponto.
 | Diagramas de arquitetura | Pronto | [docs/diagrams](./docs/diagrams) |
 | Registros de Decisão de Arquitetura | 6 publicados | [docs/adr](./docs/adr) |
 | Contratos — convenções de evento, idempotência, role IAM, dead-letter | Pronto | [docs/contracts](./docs/contracts) |
-| Deployments de referência | Planejados — Fase 3 | [ROADMAP.md](./ROADMAP.md) |
+| Deployments de referência — 4 blueprints como Terraform, handlers testados com moto | IaC validado, deploy real pendente de credenciais AWS | [infra](./infra), [ROADMAP.md](./ROADMAP.md#milestone-3--reference-deployments) |
 
 ## A ideia
 
@@ -80,7 +80,10 @@ Quatro fases, acompanhadas como milestones no GitHub. Detalhes em [ROADMAP.md](.
 
 1. **Blueprints** — as quatro formas, seus modos de falha, os diagramas, os ADRs — concluído
 2. **Contratos** — convenções de evento, idempotência, role IAM e dead-letter que todo blueprint compartilha — concluído
-3. **Deployments de referência** — cada blueprint como infraestrutura-como-código para deployar
+3. **Deployments de referência** — cada blueprint como infraestrutura-como-código — IaC escrito,
+   testado e validado (`terraform validate`, 31 testes de handler com moto); deploy real na AWS
+   está pendente de credenciais — veja a
+   [divulgação no ROADMAP.md](./ROADMAP.md#milestone-3--reference-deployments)
 4. **Drills de resiliência** — forçar retries, cold starts e throttling; mostrar cada blueprint aguentando
 
 ## Relacionados

@@ -58,16 +58,40 @@ doesn't restate it, only the missing three).
 
 **Goal:** `make deploy BLUEPRINT=x` stands up each blueprint as infrastructure-as-code.
 
-| Issue | Deliverable |
-| --- | --- |
-| Synchronous API | API Gateway, Lambda, and a store, with a per-function role |
-| Asynchronous fan-out | Event source, queue, Lambda, and a dead-letter queue |
-| Orchestrated workflow | A Step Functions state machine over several Lambdas |
-| Scheduled / batch | A schedule triggering a Lambda over a dataset |
-| Local / low-cost path | Deployable to a sandbox account cheaply, tear-down included |
+| Issue | Deliverable | Status |
+| --- | --- | --- |
+| Synchronous API | API Gateway, Lambda, and a store, with a per-function role | Done — [infra/synchronous-api](./infra/synchronous-api) |
+| Asynchronous fan-out | Event source, queue, Lambda, and a dead-letter queue | Done — [infra/async-fanout](./infra/async-fanout) |
+| Orchestrated workflow | A Step Functions state machine over several Lambdas | Done — [infra/orchestrated-workflow](./infra/orchestrated-workflow) |
+| Scheduled / batch | A schedule triggering a Lambda over a dataset | Done — [infra/scheduled-batch](./infra/scheduled-batch) |
+| Local / low-cost path | Deployable to a sandbox account cheaply, tear-down included | Partial — see disclosure below |
+
+**What's actually verified vs. what's disclosed as pending:**
+
+- The four conventions from Milestone 2 are implemented as real, executable Python
+  (`handlers/shared/idempotency.py`, `handlers/shared/event_envelope.py`) and exercised by 31
+  tests running against `moto`-mocked DynamoDB and SQS — the conditional-write race, the TTL
+  field, partial-batch-failure reporting, and the step-key idempotency scheme all run for real,
+  not by inspection.
+- The four blueprint root configs and the four shared Terraform modules
+  (`iam_role`, `idempotency_table`, `dead_letter_queue`, `lambda_function`) all pass
+  `terraform validate` — syntax and type-checked against the provider schema. The `iam_role`
+  module's `variable` `validation` blocks mechanically enforce
+  [iam-role-convention.md](./docs/contracts/iam-role-convention.md)'s shape (no `service:*`
+  actions, no `*` resources, a required justification) at plan time, with no AWS account
+  involved.
+- **What is not yet done:** no `terraform plan`/`apply` has been run against a real AWS account
+  — this environment has no AWS credentials. `make deploy BLUEPRINT=x` is written and its
+  `terraform init`/`plan`/`apply` sequence is correct, but actually standing up a blueprint (and
+  the "local/low-cost path, tear-down included" deliverable) is pending real credentials. CI
+  (`.github/workflows/ci.yml`) runs the credential-free checks — `terraform fmt -check`,
+  `terraform validate` per directory, the moto-backed test suite, lint, and type-check — on every
+  push, but does not and cannot verify an actual deploy.
 
 **Exit criteria:** a first-time reader deploys each blueprint from one command and sees a per-function
-role, a dead-letter queue, and an idempotent handler in place.
+role, a dead-letter queue, and an idempotent handler in place. **Partially met** — the
+infrastructure-as-code, its credential-free validation, and the handler logic's real behavior
+are all done; the actual deploy-and-observe step awaits an AWS account.
 
 ---
 

@@ -4,7 +4,7 @@
 > of the recurring serverless workload shapes on AWS — each honest about statelessness, at-least-once
 > delivery, cold starts, and least privilege. Documented first, implemented in the open.
 
-[![Phase](https://img.shields.io/badge/phase-2%20contracts-blue)](./ROADMAP.md)
+[![Phase](https://img.shields.io/badge/phase-3%20reference%20deployments-blue)](./ROADMAP.md)
 [![ADRs](https://img.shields.io/badge/ADRs-6-green)](./docs/adr)
 [![Blueprints](https://img.shields.io/badge/blueprints-4-blueviolet)](./docs/blueprints)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)](./LICENSE)
@@ -35,7 +35,7 @@ they are the point.
 | Architecture diagrams | Done | [docs/diagrams](./docs/diagrams) |
 | Architecture Decision Records | 6 published | [docs/adr](./docs/adr) |
 | Contracts — event, idempotency, IAM-role, dead-letter conventions | Done | [docs/contracts](./docs/contracts) |
-| Reference deployments | Planned — Phase 3 | [ROADMAP.md](./ROADMAP.md) |
+| Reference deployments — 4 blueprints as Terraform, moto-tested handlers | IaC validated, real deploy pending AWS credentials | [infra](./infra), [ROADMAP.md](./ROADMAP.md#milestone-3--reference-deployments) |
 
 ## The idea
 
@@ -87,7 +87,9 @@ Four phases, tracked as GitHub milestones. See [ROADMAP.md](./ROADMAP.md).
 
 1. **Blueprints** — the four shapes, their failure modes, the diagrams, the ADRs — done
 2. **Contracts** — the event, idempotency, IAM-role, and dead-letter conventions every blueprint shares — done
-3. **Reference deployments** — each blueprint as infrastructure-as-code you can deploy
+3. **Reference deployments** — each blueprint as infrastructure-as-code — IaC written, tested, and
+   validated (`terraform validate`, 31 moto-backed handler tests); real deploy to AWS is pending
+   credentials — see the [disclosure in ROADMAP.md](./ROADMAP.md#milestone-3--reference-deployments)
 4. **Resilience drills** — force retries, cold starts, and throttling; show each blueprint holding
 
 ## Related
